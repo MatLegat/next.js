@@ -35,7 +35,7 @@ use crate::{
     key::{StoreKey, hash_key},
     lookup_entry::{LookupEntry, LookupValue},
     merge_iter::MergeIter,
-    meta_file::{AqmfCache, MetaFile, MetaLookupResult, StaticSortedFileRange},
+    meta_file::{AmqfCache, MetaFile, MetaLookupResult, StaticSortedFileRange},
     meta_file_builder::MetaFileBuilder,
     sst_filter::SstFilter,
     static_sorted_file::{BlockCache, SstLookupResult},
@@ -124,7 +124,7 @@ pub struct TurboPersistence {
     /// write operations.
     active_write_operation: AtomicBool,
     /// A cache for deserialized AMQF filters.
-    amqf_cache: AqmfCache,
+    amqf_cache: AmqfCache,
     /// A cache for decompressed key blocks.
     key_block_cache: BlockCache,
     /// A cache for decompressed value blocks.
@@ -163,7 +163,7 @@ impl TurboPersistence {
             }),
             idle_write_batch: Mutex::new(None),
             active_write_operation: AtomicBool::new(false),
-            amqf_cache: AqmfCache::with(
+            amqf_cache: AmqfCache::with(
                 AMQF_CACHE_SIZE as usize / AMQF_AVG_SIZE,
                 AMQF_CACHE_SIZE,
                 Default::default(),
