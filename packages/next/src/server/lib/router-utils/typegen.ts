@@ -1,5 +1,6 @@
 import type { RouteTypesManifest } from './route-types-utils'
 import { isDynamicRoute } from '../../../shared/lib/router/utils/is-dynamic'
+import type { NextConfigComplete } from '../../config-shared'
 
 function generateRouteTypes(routesManifest: RouteTypesManifest): string {
   const appRoutes = Object.keys(routesManifest.appRoutes).sort()
@@ -176,7 +177,8 @@ function serializeRouteTypes(routeTypes: string[]) {
 }
 
 export function generateRouteTypesFile(
-  routesManifest: RouteTypesManifest
+  routesManifest: RouteTypesManifest,
+  config: NextConfigComplete
 ): string {
   const routeTypes = generateRouteTypes(routesManifest)
   const paramTypes = generateParamTypes(routesManifest)
@@ -259,7 +261,9 @@ declare global {
     params: Promise<ParamsOf<P>>
   } & LayoutChildren<P>
 }
-
+${
+  config.experimental?.typedRoutes === true
+    ? `
 // Type definitions for Next.js routes
 
 /**
@@ -386,6 +390,9 @@ declare module 'next/form' {
   } & FormRestProps
 
   export default function Form<RouteType>(props: FormProps<RouteType>): JSX.Element
+}
+`
+    : ''
 }
 `
 }

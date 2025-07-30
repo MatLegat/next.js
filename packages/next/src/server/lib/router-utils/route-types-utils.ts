@@ -183,7 +183,8 @@ export async function createRouteTypesManifest({
 
 export async function writeRouteTypesManifest(
   manifest: RouteTypesManifest,
-  filePath: string
+  filePath: string,
+  config: NextConfigComplete
 ) {
   const dirname = path.dirname(filePath)
 
@@ -191,5 +192,8 @@ export async function writeRouteTypesManifest(
     await mkdir(dirname, { recursive: true })
   }
 
-  await fs.promises.writeFile(filePath, generateRouteTypesFile(manifest))
+  await fs.promises.writeFile(
+    filePath,
+    generateRouteTypesFile(manifest, config)
+  )
 }
